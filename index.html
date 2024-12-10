@@ -3,101 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Cloud Consulting Solutions</title>
+    <title>Real-Time Weather Forecast</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
+            background: linear-gradient(to bottom, #87CEFA, #4682B4);
+            color: white;
         }
         header {
-            background-color: #007BFF;
-            color: white;
             padding: 20px;
-            text-align: center;
+            background-color: #4682B4;
         }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #0056b3;
-            padding: 10px 0;
-        }
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-size: 18px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        section {
+        .container {
             padding: 20px;
-            text-align: center;
         }
-        .services {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        input {
+            padding: 10px;
+            width: 60%;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            background-color: #00688B;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005580;
+        }
+        .weather-info {
             margin-top: 20px;
         }
-        .service {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: 30%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .weather-info h2 {
+            font-size: 24px;
         }
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        .weather-info p {
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Cloud Consulting Solutions</h1>
-        <p>Your Partner in Cloud Transformation</p>
+        <h1>Real-Time Weather Forecast</h1>
     </header>
-    <nav>
-        <a href="#about">About Us</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact</a>
-    </nav>
-    <section id="about">
-        <h2>About Us</h2>
-        <p>We specialize in helping businesses harness the power of cloud computing to drive innovation, efficiency, and growth.</p>
-    </section>
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="services">
-            <div class="service">
-                <h3>Cloud Strategy</h3>
-                <p>Customized strategies to meet your unique business goals.</p>
-            </div>
-            <div class="service">
-                <h3>Migration Services</h3>
-                <p>Seamless transition to the cloud with minimal disruption.</p>
-            </div>
-            <div class="service">
-                <h3>Cloud Management</h3>
-                <p>End-to-end management of your cloud infrastructure.</p>
-            </div>
-        </div>
-    </section>
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <p>Email: info@cloudconsulting.com</p>
-        <p>Phone: +1 (800) 123-4567</p>
-        <p>Address: 123 Cloud Lane, Tech City</p>
-    </section>
-    <footer>
-        <p>&copy; 2024 Cloud Consulting Solutions. All rights reserved.</p>
-    </footer>
+    <div class="container">
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+        <div class="weather-info" id="weatherInfo"></div>
+    </div>
+
+    <script>
+        const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeatherMap API key
+
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            if (!city) {
+                alert("Please enter a city name.");
+                return;
+            }
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    const weatherInfo = `
+                        <h2>Weather in ${data.name}, ${data.sys.country}</h2>
+                        <p>Temperature: ${data.main.temp}°C</p>
+                        <p>Weather: ${data.weather[0].description}</p>
+                        <p>Humidity: ${data.main.humidity}%</p>
+                        <p>Wind Speed: ${data.wind.speed} m/s</p>
+                    `;
+                    document.getElementById('weatherInfo').innerHTML = weatherInfo;
+                } else {
+                    alert("City not found. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+                alert("Unable to retrieve weather information at this time.");
+            }
+        }
+    </script>
 </body>
 </html>
